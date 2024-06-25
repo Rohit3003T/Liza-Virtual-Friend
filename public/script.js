@@ -214,4 +214,3 @@ function askEngagingQuestion() {
 window.addEventListener('beforeunload', () => {
   speechSynthesis.cancel();
 });
-

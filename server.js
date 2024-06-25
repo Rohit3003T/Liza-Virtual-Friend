@@ -2,7 +2,7 @@ const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const { Pool } = require("pg");
+
 
 dotenv.config();
 
@@ -12,31 +12,22 @@ const port = process.env.PORT;
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const sessions = new Map();
 
-// Database setup
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+app.post('/submit-name', (req, res) => {
 
-app.post('/submit-name', async (req, res) => {
   const userName = req.body.userName;
-
-  try {
-    // Store user's name in the database
-    const result = await pool.query('INSERT INTO users (name) VALUES ($1) RETURNING id', [userName]);
-    const userId = result.rows[0].id;
-    
-    // Redirect to bot.html or send back a response accordingly
-    res.redirect('/bot.html');
-  } catch (error) {
-    console.error('Error storing user name:', error);
-    res.status(500).send('Error storing user name');
-  }
+ 
+  
+  // Store user's name in session or database if needed
+  // Redirect to bot.html or send back a response accordingly
+  res.redirect('/bot.html');
 });
+
+
+
 
 app.post("/generate", async (req, res) => {
   const { prompt, sessionId } = req.body;
