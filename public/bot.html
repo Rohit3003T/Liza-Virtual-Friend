@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liza Virtual Friend</title>
+  <title>Liza</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -14,7 +14,7 @@
       <div class="col-md-8 col-lg-6">
         <div id="chat-container" class="card mt-5 shadow">
           <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h3 class="mb-0"><i class="fas fa-comment-dots mr-2"></i>Liza </h3>
+            <h3 class="mb-0"><i class="fas fa-comment-dots mr-2"></i>Liza</h3>
             <button id="voice-output-button" class="btn btn-outline-light btn-sm">
               <i class="fas fa-volume-up mr-1"></i>Voice Output: On
             </button>
@@ -43,20 +43,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
-  <script>
-    // Check if session storage flag is set
-    if (!sessionStorage.getItem('refreshed')) {
-      // Set the flag to true to prevent further refreshing
-      sessionStorage.setItem('refreshed', 'true');
-
-      // Reload the page after a short delay (optional)
-      setTimeout(() => {
-        window.location.reload();
-      }, 500); // Adjust delay as needed (500 milliseconds here)
-
-      // Alternatively, if you want immediate reload without delay:
-      // window.location.reload();
-    }
-  </script>
+ 
 </body>
 </html>
