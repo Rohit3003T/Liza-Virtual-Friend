@@ -3,46 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liza Virtual Friend</title>
+    <title>Welcome to IRA</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./main.css">
-    <script>
-        // Function to reload the page
-        function reloadPage() {
-            // Show the modal notification
-            $('#reloadModal').modal('show');
-
-            // Reload the page after a short delay to allow the user to see the notification
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        }
-
-        // Check if the page has already reloaded
-        if (!sessionStorage.getItem('reloaded')) {
-            sessionStorage.setItem('reloaded', 'true');
-            window.onload = function() {
-                reloadPage();
-            };
-        } else {
-            // Set an interval to refresh the page every 40 seconds
-            setInterval(reloadPage, 40000);
-        }
-    </script>
 </head>
 <body>
     <div class="bg d-flex align-items-center justify-content-center">
         <div class="center-box">
             <div class="typing-animation">Hello! I'm Liza. What's your name?</div>
-            <form id="name-form" class="name-input" action="/submit-name" method="POST">
+            <form id="name-form" class="name-input">
                 <input type="text" id="name" name="userName" class="form-control mt-3" placeholder="Enter your name" required>
                 <button type="submit" class="btn btn-primary mt-3">Start conversation</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal for reload notification -->
     <div class="modal fade" id="reloadModal" tabindex="-1" role="dialog" aria-labelledby="reloadModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -58,12 +34,34 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="./script.js"></script>
-    
+    <script>
+        document.getElementById('name-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userName = document.getElementById('name').value;
+            try {
+                const response = await fetch('/submit-name', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userName: userName }),
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to submit name');
+                }
+                const data = await response.json();
+                localStorage.setItem('userId', data.userId);
+                window.location.href = '/bot.html';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
 </body>
 </html>

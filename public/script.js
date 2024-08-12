@@ -5,7 +5,7 @@ let speechSynthesis = window.speechSynthesis;
 let maleVoice;
 let speechQueue = [];
 let voicesLoaded = false;
-let sessionId = Date.now().toString();
+let userId;
 
 document.addEventListener("DOMContentLoaded", () => {
   recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
@@ -45,23 +45,47 @@ document.addEventListener("DOMContentLoaded", () => {
       maleVoice = voices.find(voice => voice.lang.startsWith('en'));
     }
     voicesLoaded = true;
-    greetUser();
   };
 
   updateVoiceOutputButton();
-  greetUser();
+  loadChatHistory();
   setInterval(askEngagingQuestion, 5 * 60 * 1000);
 });
+
+async function loadChatHistory() {
+  userId = localStorage.getItem('userId');
+  if (!userId) {
+    console.error('User ID not found');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/chat-history?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch chat history');
+    }
+    const chatHistory = await response.json();
+    chatHistory.forEach(message => {
+      addMessage(message.message, message.sender.toLowerCase());
+    });
+    if (chatHistory.length === 0) {
+      greetUser();
+    }
+  } catch (error) {
+    console.error('Error loading chat history:', error);
+    greetUser();
+  }
+}
 
 function greetUser() {
   if (!voicesLoaded) return;
 
   const greetings = [
-    "Hello! I'm  Liza yours AIFriend. How are you feeling today?",
-    "Hi there! I'm  Liza yours AIFriend. What's on your mind?",
-    "Welcome! I'm  Liza yours AIFriend. How can I support you today?",
-    "Greetings! I'm  Liza yours AIFriend. How has your day been so far?",
-    "Hi! I'm  Liza yours AIFriend. Is there anything you'd like to talk about?"
+    "Hello! I'm Liza, your AIFriend. How are you feeling today?",
+    "Hi there! I'm Liza, your AIFriend. What's on your mind?",
+    "Welcome! I'm Liza, your AIFriend. How can I support you today?",
+    "Greetings! I'm Liza, your AIFriend. How has your day been so far?",
+    "Hi! I'm Liza, your AIFriend. Is there anything you'd like to talk about?"
   ];
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
   addMessage(greeting, "bot");
@@ -83,7 +107,7 @@ async function sendMessage() {
       },
       body: JSON.stringify({ 
         prompt: userInput,
-        sessionId: sessionId
+        userId: userId
       }),
     });
 
